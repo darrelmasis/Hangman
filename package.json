@@ -1,0 +1,39 @@
+{
+  "name": "Hangman",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darrelmasis/Hangman.git"
+  },
+  "keywords": [],
+  "author": "Darrel Masis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/darrelmasis/Hangman/issues"
+  },
+  "homepage": "https://github.com/darrelmasis/Hangman#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.13.14",
+    "@babel/core": "^7.13.14",
+    "@babel/preset-env": "^7.13.12",
+    "@babel/register": "^7.13.14",
+    "autoprefixer": "^10.2.5",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.14",
+    "browserify": "^17.0.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-minify": "^3.1.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-postcss": "^9.0.0",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
