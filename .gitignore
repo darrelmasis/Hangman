@@ -1,0 +1,11 @@
+# Windows image file cache
+thumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Windows Shortcuts
+*.lnk
+
+node_modules
+.vscode
