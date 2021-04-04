@@ -21,7 +21,7 @@ const path = {
     dest: './dist/css/'
   },
   scripts: {
-    src: './src/js/index.js',
+    src: './dev/js/index.js',
     dest: './dist/js/'
   }
 }
@@ -55,8 +55,7 @@ const scripts = done => {
     .pipe(buffer())
     .pipe(minify({
       ext: {
-        src: '-bundle.js',
-        min: '-min.js'
+        min: '.min.js'
       }
     }))
     .pipe(sourcemaps.init({loadMaps: true}))
