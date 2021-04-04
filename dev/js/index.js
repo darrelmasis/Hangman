@@ -34,8 +34,7 @@ let to = ['a','e','i','o','u','n']
 
 // Reemplazar la palabra secreta por guiones
 for (let i = 0; i < GAME.secretWord.length; i++) {
-  const element = GAME.secretWord[i]
-  element = '_'
+  GAME.answerArray[i] = '_'
 }
 
 const canvas = $('my-canvas')
@@ -43,5 +42,41 @@ const ctx = canvas.getContext('2d')
 
 class Game {
 
+  /**
+   * Dibuja las vidas
+   */
+  drawLives() {
+    for (let i = 0; i < PLAYER.lives; i++) {
+      const heart = new Image()
+      heart.src = './dist/img/heart.png'
+      heart.onload = () => {
+        let x = (canvas.width - ((PLAYER.lives * heart.width) + ((PLAYER.lives - 1) * 4))) + (i * (heart.width + 4))
+        ctx.beginPath()
+        ctx.drawImage(heart, x, 0)
+        ctx.closePath()
+      }
+    }
+  }
+
+  /**
+   * Dibuja la palabra secreta
+   */
+  drawSecretWord() {
+    for (let i = 0; i < GAME.secretWord.length; i++) {
+      const element = GAME.secretWord[i];
+      let x = (canvas.width - ((GAME.secretWord.length * 24) + ((GAME.secretWord.length - 1) * 4))) + (i * (24 + 4))
+      ctx.beginPath()
+      ctx.font = "Bold 32px sans-serif"
+      ctx.fillText(GAME.answerArray[i], x, canvas.height - 6)
+      ctx.closePath()
+    }
+  }
 }
 
+const newGame = () => {
+  return new Game()
+}
+
+newGame()
+newGame().drawLives()
+newGame().drawSecretWord()
