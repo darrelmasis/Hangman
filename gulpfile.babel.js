@@ -73,7 +73,7 @@ const serverUp = done => {
   })
   gulp.watch(path.styles.src, styles, server.reload)
   gulp.watch(path.scripts.src, scripts, server.reload)
-  gulp.watch('./*.html').on('change', server.reload)
+  gulp.watch(['./*.html', './**/*.js']).on('change', server.reload)
   done()
 }
 
