@@ -9,7 +9,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var categories = ['Gente', 'Cuerpo humano y salud']; // Palabras del juego
+var categories = ['Gente', 'Cuerpo humano y salud'];
+var gameKeys = (0, _functions.$)('game-keys');
+var keys = [['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'], ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'], ['Z', 'X', 'C', 'V', 'B', 'N', 'M']]; // Palabras del juego
 
 var words = [// Gente
 ['humanidad', 'humano', 'persona', 'gente', 'hombre', 'mujer', 'bebé', 'niño', 'niña', 'adolescente', 'adulto', 'adulta', 'anciano', 'anciana', 'don', 'doña', 'señor', 'señora', 'caballero', 'dama'], // Cuerpo humano y salud
@@ -19,16 +21,18 @@ var GAME = {
 };
 var PLAYER = {
   lives: 6,
-  guess: ''
+  guess: '',
+  guessStatus: true
 }; // Obtener categoría y palabra secreta aleatoria
 
 var cPosition = (0, _functions.random)(categories);
 var wPosition = (0, _functions.random)(words[cPosition]); // Agregar resultados obtenidos al objeto GAME
 
 GAME.category = categories[cPosition];
-GAME.secretWord = words[cPosition][wPosition];
-var from = ['á', 'é', 'í', 'ó', 'ú', 'ñ'];
-var to = ['a', 'e', 'i', 'o', 'u', 'n']; // Reemplazar la palabra secreta por guiones
+GAME.secretWord = words[cPosition][wPosition].toUpperCase();
+GAME.secretWord = 'ACOrdeóN'.toUpperCase();
+var from = ['Á', 'É', 'Í', 'Ó', 'Ú'];
+var to = ['A', 'E', 'I', 'O', 'U']; // Reemplazar la palabra secreta por guiones
 
 for (var i = 0; i < GAME.secretWord.length; i++) {
   GAME.answerArray[i] = '_';
@@ -49,6 +53,8 @@ var Game = /*#__PURE__*/function () {
      * Dibuja las vidas
      */
     function drawLives() {
+      ctx.clearRect(canvas.width - 116, 0, 116, 16);
+
       var _loop = function _loop(_i) {
         var heart = new Image();
         heart.src = './dist/img/heart.png';
@@ -72,8 +78,16 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "drawSecretWord",
     value: function drawSecretWord() {
+      GAME.secretWord.includes(PLAYER.guess) ? PLAYER.guessStatus = true : PLAYER.guessStatus = false;
+
       for (var _i2 = 0; _i2 < GAME.secretWord.length; _i2++) {
         var element = GAME.secretWord[_i2];
+
+        if ((0, _functions.str_replace)(from, to, element) === PLAYER.guess) {
+          PLAYER.guessStatus = true;
+          GAME.answerArray[_i2] = element;
+        }
+
         var x = canvas.width - (GAME.secretWord.length * 24 + (GAME.secretWord.length - 1) * 4) + _i2 * (24 + 4);
         ctx.beginPath();
         ctx.font = "Bold 32px sans-serif";
@@ -81,10 +95,48 @@ var Game = /*#__PURE__*/function () {
         ctx.closePath();
       }
     }
+  }, {
+    key: "drawKeys",
+    value: function drawKeys() {
+      for (var _i3 = 0; _i3 < keys.length; _i3++) {
+        var row = keys[_i3];
+        var rowSection = document.createElement('section');
+        rowSection.setAttribute('id', 'row-' + _i3 + 1);
+        rowSection.classList.add('keys-section');
+        gameKeys.appendChild(rowSection);
+        var section = (0, _functions.$)('row-' + _i3 + 1);
+
+        for (var _i4 = 0; _i4 < row.length; _i4++) {
+          var rowElement = row[_i4];
+          var button = document.createElement('button');
+          button.classList.add('key');
+          button.setAttribute('data-key', rowElement);
+          button.textContent = row[_i4];
+          section.appendChild(button);
+        }
+      }
+    }
   }]);
 
   return Game;
 }();
+
+gameKeys.addEventListener('click', function (e) {
+  var key = e.target;
+
+  if (key.tagName === 'BUTTON') {
+    // cambiamos el estado del botón
+    key.classList.add('pressed');
+    PLAYER.guess = key.textContent;
+    newGame().drawSecretWord();
+
+    if (PLAYER.guessStatus !== true) {
+      PLAYER.lives--;
+      console.log(PLAYER.lives);
+      newGame().drawLives();
+    }
+  }
+});
 
 var newGame = function newGame() {
   return new Game();
@@ -93,6 +145,7 @@ var newGame = function newGame() {
 newGame();
 newGame().drawLives();
 newGame().drawSecretWord();
+newGame().drawKeys();
 
 },{"./modules/functions":2}],2:[function(require,module,exports){
 "use strict";

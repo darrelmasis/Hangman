@@ -1,6 +1,12 @@
 import {random, $, cleanString, str_replace} from './modules/functions'
 
-const categories = ['Gente','Cuerpo humano y salud'];
+const categories = ['Gente','Cuerpo humano y salud']
+const gameKeys = $('game-keys')
+const keys = [
+  ['Q','W','E','R','T','Y','U','I','O','P'],
+  ['A','S','D','F','G','H','J','K','L','Ñ'],
+  ['Z','X','C','V','B','N','M']
+];
 
 // Palabras del juego
 const words = [
@@ -16,7 +22,8 @@ const GAME = {
 
 const PLAYER = {
   lives: 6,
-  guess: ''
+  guess: '',
+  guessStatus: true
 }
 
 // Obtener categoría y palabra secreta aleatoria
@@ -26,11 +33,12 @@ let wPosition = random(words[cPosition])
 
 // Agregar resultados obtenidos al objeto GAME
 GAME.category = categories[cPosition]
-GAME.secretWord = words[cPosition][wPosition]
+GAME.secretWord = words[cPosition][wPosition].toUpperCase()
 
+GAME.secretWord = 'ACOrdeóN'.toUpperCase()
 
-let from = ['á','é','í','ó','ú','ñ']
-let to = ['a','e','i','o','u','n']
+let from = ['Á','É','Í','Ó','Ú']
+let to = ['A','E','I','O','U']
 
 // Reemplazar la palabra secreta por guiones
 for (let i = 0; i < GAME.secretWord.length; i++) {
@@ -46,6 +54,7 @@ class Game {
    * Dibuja las vidas
    */
   drawLives() {
+    ctx.clearRect(canvas.width - 116,0,116,16)
     for (let i = 0; i < PLAYER.lives; i++) {
       const heart = new Image()
       heart.src = './dist/img/heart.png'
@@ -62,8 +71,13 @@ class Game {
    * Dibuja la palabra secreta
    */
   drawSecretWord() {
+    GAME.secretWord.includes(PLAYER.guess) ? PLAYER.guessStatus = true : PLAYER.guessStatus = false
     for (let i = 0; i < GAME.secretWord.length; i++) {
       const element = GAME.secretWord[i];
+      if(str_replace(from,to,element) === PLAYER.guess) {
+        PLAYER.guessStatus = true
+        GAME.answerArray[i] = element
+      }
       let x = (canvas.width - ((GAME.secretWord.length * 24) + ((GAME.secretWord.length - 1) * 4))) + (i * (24 + 4))
       ctx.beginPath()
       ctx.font = "Bold 32px sans-serif"
@@ -71,7 +85,43 @@ class Game {
       ctx.closePath()
     }
   }
+
+  drawKeys() {
+    for (let i = 0; i < keys.length; i++) {
+      const row = keys[i];
+      let rowSection = document.createElement('section')
+      rowSection.setAttribute('id','row-' + i+1)
+      rowSection.classList.add('keys-section')
+      gameKeys.appendChild(rowSection)
+      const section = $('row-' + i+1)
+
+      for (let i = 0; i < row.length; i++) {
+        const rowElement = row[i];
+        let button = document.createElement('button')
+        button.classList.add('key')
+        button.setAttribute('data-key',rowElement)
+        button.textContent = row[i]
+        section.appendChild(button)
+      }
+    }
+  }
 }
+
+gameKeys.addEventListener('click', e => {
+  let key = e.target
+  if(key.tagName === 'BUTTON') {
+    // cambiamos el estado del botón
+    key.classList.add('pressed')
+    PLAYER.guess = key.textContent
+    newGame().drawSecretWord()
+
+    if(PLAYER.guessStatus !== true) {
+      PLAYER.lives--
+      console.log(PLAYER.lives)
+      newGame().drawLives()
+    }
+  }
+})
 
 const newGame = () => {
   return new Game()
@@ -80,3 +130,4 @@ const newGame = () => {
 newGame()
 newGame().drawLives()
 newGame().drawSecretWord()
+newGame().drawKeys()
