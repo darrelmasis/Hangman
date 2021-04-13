@@ -35,7 +35,6 @@ let wPosition = random(words[cPosition])
 GAME.category = categories[cPosition]
 GAME.secretWord = words[cPosition][wPosition].toUpperCase()
 
-GAME.secretWord = 'ACOrdeóN'.toUpperCase()
 
 let from = ['Á','É','Í','Ó','Ú']
 let to = ['A','E','I','O','U']

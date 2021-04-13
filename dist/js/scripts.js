@@ -30,7 +30,6 @@ var wPosition = (0, _functions.random)(words[cPosition]); // Agregar resultados 
 
 GAME.category = categories[cPosition];
 GAME.secretWord = words[cPosition][wPosition].toUpperCase();
-GAME.secretWord = 'ACOrdeóN'.toUpperCase();
 var from = ['Á', 'É', 'Í', 'Ó', 'Ú'];
 var to = ['A', 'E', 'I', 'O', 'U']; // Reemplazar la palabra secreta por guiones
 
