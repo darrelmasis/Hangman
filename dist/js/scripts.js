@@ -98,20 +98,21 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "drawKeys",
     value: function drawKeys() {
-      for (var _i3 = 0; _i3 < keys.length; _i3++) {
-        var row = keys[_i3];
+      for (var rows = 0; rows < keys.length; rows++) {
+        var row = keys[rows];
         var rowSection = document.createElement('section');
-        rowSection.setAttribute('id', 'row-' + _i3 + 1);
+        var rowId = rows + 1;
+        rowSection.setAttribute('id', 'row-' + rowId);
         rowSection.classList.add('keys-section');
         gameKeys.appendChild(rowSection);
-        var section = (0, _functions.$)('row-' + _i3 + 1);
+        var section = (0, _functions.$)('row-' + rowId);
 
-        for (var _i4 = 0; _i4 < row.length; _i4++) {
-          var rowElement = row[_i4];
+        for (var _i3 = 0; _i3 < row.length; _i3++) {
+          var rowElement = row[_i3];
           var button = document.createElement('button');
           button.classList.add('key');
           button.setAttribute('data-key', rowElement);
-          button.textContent = row[_i4];
+          button.textContent = row[_i3];
           section.appendChild(button);
         }
       }

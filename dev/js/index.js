@@ -87,13 +87,14 @@ class Game {
   }
 
   drawKeys() {
-    for (let i = 0; i < keys.length; i++) {
-      const row = keys[i];
+    for (let rows = 0; rows < keys.length; rows++) {
+      const row = keys[rows];
       let rowSection = document.createElement('section')
-      rowSection.setAttribute('id','row-' + i+1)
+      let rowId = rows + 1
+      rowSection.setAttribute('id','row-' + rowId)
       rowSection.classList.add('keys-section')
       gameKeys.appendChild(rowSection)
-      const section = $('row-' + i+1)
+      const section = $('row-' + rowId)
 
       for (let i = 0; i < row.length; i++) {
         const rowElement = row[i];
