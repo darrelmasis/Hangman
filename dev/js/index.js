@@ -23,7 +23,8 @@ const GAME = {
 const PLAYER = {
   lives: 6,
   guess: '',
-  guessStatus: true
+  guessStatus: true,
+  attemps: 0
 }
 
 // Obtener categoría y palabra secreta aleatoria
@@ -70,6 +71,7 @@ class Game {
    * Dibuja la palabra secreta
    */
   drawSecretWord() {
+    ctx.clearRect(0,canvas.height-40,canvas.width,40)
     GAME.secretWord.includes(PLAYER.guess) ? PLAYER.guessStatus = true : PLAYER.guessStatus = false
     for (let i = 0; i < GAME.secretWord.length; i++) {
       const element = GAME.secretWord[i];
@@ -79,7 +81,7 @@ class Game {
       }
       let x = (canvas.width - ((GAME.secretWord.length * 24) + ((GAME.secretWord.length - 1) * 4))) + (i * (24 + 4))
       ctx.beginPath()
-      ctx.font = "Bold 32px sans-serif"
+      ctx.font = "32px calibri"
       ctx.fillText(GAME.answerArray[i], x, canvas.height - 6)
       ctx.closePath()
     }
@@ -105,20 +107,45 @@ class Game {
       }
     }
   }
+
+  gameOver() {
+    if (PLAYER.lives === 0) {
+      ctx.beginPath()
+      ctx.font = "Bold 40px calibri"
+      let text = "¡Has perdido!"
+      let text2 = "La palabra secreta era "+ GAME.secretWord
+      ctx.fillText(text,(canvas.width/2)-ctx.measureText(text).width/2, canvas.height/2)
+      ctx.font = "Bold 28px calibri"
+      ctx.fillText(text2,(canvas.width/2)-ctx.measureText(text2).width/2, (canvas.height/2) + 40)
+      ctx.closePath()
+    } else {
+      ctx.beginPath()
+      let text = "¡Enhorabuena!"
+      let text2 = "Lo has conseguido en " + PLAYER.attemps + " intentos"
+      ctx.font = "Bold 40px calibri"
+      ctx.fillText(text,(canvas.width/2)-ctx.measureText(text).width/2, canvas.height/2)
+      ctx.font = "Bold 28px calibri"
+      ctx.fillText(text2,(canvas.width/2)-ctx.measureText(text2).width/2, (canvas.height/2) + 40)
+      ctx.closePath()
+    }
+  }
+
 }
 
 gameKeys.addEventListener('click', e => {
   let key = e.target
-  if(key.tagName === 'BUTTON') {
-    // cambiamos el estado del botón
+  if (key.tagName === 'BUTTON') {
     key.classList.add('pressed')
     PLAYER.guess = key.textContent
+    PLAYER.attemps++
     newGame().drawSecretWord()
-
-    if(PLAYER.guessStatus !== true) {
+    if (PLAYER.guessStatus !== true) {
       PLAYER.lives--
       console.log(PLAYER.lives)
       newGame().drawLives()
+    }
+    if (PLAYER.lives === 0 || GAME.answerArray.join('') === GAME.secretWord) {
+      newGame().gameOver()
     }
   }
 })

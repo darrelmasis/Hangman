@@ -22,7 +22,8 @@ var GAME = {
 var PLAYER = {
   lives: 6,
   guess: '',
-  guessStatus: true
+  guessStatus: true,
+  attemps: 0
 }; // Obtener categoría y palabra secreta aleatoria
 
 var cPosition = (0, _functions.random)(categories);
@@ -77,6 +78,7 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "drawSecretWord",
     value: function drawSecretWord() {
+      ctx.clearRect(0, canvas.height - 40, canvas.width, 40);
       GAME.secretWord.includes(PLAYER.guess) ? PLAYER.guessStatus = true : PLAYER.guessStatus = false;
 
       for (var _i2 = 0; _i2 < GAME.secretWord.length; _i2++) {
@@ -89,7 +91,7 @@ var Game = /*#__PURE__*/function () {
 
         var x = canvas.width - (GAME.secretWord.length * 24 + (GAME.secretWord.length - 1) * 4) + _i2 * (24 + 4);
         ctx.beginPath();
-        ctx.font = "Bold 32px sans-serif";
+        ctx.font = "32px calibri";
         ctx.fillText(GAME.answerArray[_i2], x, canvas.height - 6);
         ctx.closePath();
       }
@@ -116,6 +118,31 @@ var Game = /*#__PURE__*/function () {
         }
       }
     }
+  }, {
+    key: "gameOver",
+    value: function gameOver() {
+      if (PLAYER.lives === 0) {
+        ctx.beginPath();
+        ctx.font = "Bold 40px calibri";
+        var text = "¡Has perdido!";
+        var text2 = "La palabra secreta era " + GAME.secretWord;
+        ctx.fillText(text, canvas.width / 2 - ctx.measureText(text).width / 2, canvas.height / 2);
+        ctx.font = "Bold 28px calibri";
+        ctx.fillText(text2, canvas.width / 2 - ctx.measureText(text2).width / 2, canvas.height / 2 + 40);
+        ctx.closePath();
+      } else {
+        ctx.beginPath();
+        var _text = "¡Enhorabuena!";
+
+        var _text2 = "Lo has conseguido en " + PLAYER.attemps + " intentos";
+
+        ctx.font = "Bold 40px calibri";
+        ctx.fillText(_text, canvas.width / 2 - ctx.measureText(_text).width / 2, canvas.height / 2);
+        ctx.font = "Bold 28px calibri";
+        ctx.fillText(_text2, canvas.width / 2 - ctx.measureText(_text2).width / 2, canvas.height / 2 + 40);
+        ctx.closePath();
+      }
+    }
   }]);
 
   return Game;
@@ -125,15 +152,19 @@ gameKeys.addEventListener('click', function (e) {
   var key = e.target;
 
   if (key.tagName === 'BUTTON') {
-    // cambiamos el estado del botón
     key.classList.add('pressed');
     PLAYER.guess = key.textContent;
+    PLAYER.attemps++;
     newGame().drawSecretWord();
 
     if (PLAYER.guessStatus !== true) {
       PLAYER.lives--;
       console.log(PLAYER.lives);
       newGame().drawLives();
+    }
+
+    if (PLAYER.lives === 0 || GAME.answerArray.join('') === GAME.secretWord) {
+      newGame().gameOver();
     }
   }
 });
